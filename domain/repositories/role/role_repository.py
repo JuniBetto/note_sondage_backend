@@ -1,0 +1,19 @@
+from abc import ABC
+from typing import Optional
+from uuid import UUID
+
+from domain.entities.role.role_entity import RoleEntity
+
+
+class RoleRepository(ABC):
+    def find_by_id(self, role_id: UUID) -> Optional[RoleEntity] | None:...
+
+    def create(self, role: RoleEntity) -> RoleEntity:...
+
+    def update(self, role: RoleEntity) -> RoleEntity:...
+
+    def delete(self, role_id: UUID) -> RoleEntity:...
+
+    def get_all(self) -> list[RoleEntity]:...
+
+    def find_by_name(self, name: str) -> Optional[RoleEntity] | None:...
