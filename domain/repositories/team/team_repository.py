@@ -1,0 +1,19 @@
+from abc import ABC, abstractmethod
+from typing import Optional
+
+from domain.entities.team.team_entity import TeamEntity
+
+
+class TeamRepository(ABC):
+    @abstractmethod
+    async def find_by_id(self, team_id: str) -> Optional[TeamEntity] | None:...
+    @abstractmethod
+    async def create(self, team: TeamEntity) -> TeamEntity:...
+    @abstractmethod
+    async def update(self, team: TeamEntity) -> TeamEntity:...
+    @abstractmethod
+    async def delete(self, team_id: str) -> TeamEntity:...
+    @abstractmethod
+    async def get_all(self) -> list[TeamEntity]:...
+    @abstractmethod
+    async def get_all_by_user_id(self, user_id: str) -> list[TeamEntity]:...

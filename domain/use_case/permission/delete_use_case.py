@@ -13,16 +13,14 @@ class DeletePermissionUseCase:
 
     async def execute(self, permission_id: UUID):
         # Fetch the existing permission
-        permission = self.permission_repository.find_by_id(permission_id)
+        permission = await self.permission_repository.find_by_id(permission_id)
         if not permission:
             raise PermissionNotFound(permission_id)
 
         # Delete the permission
-        self.permission_repository.delete(permission.id)
+        await self.permission_repository.delete(permission.id)
 
-        
-
-                # Notifica dell'evento di creazione
+        # Notifica dell'evento di creazione
         eventEntity = EventEntity(
             name="Permission Deleted",
             payload=permission.to_dict() ,

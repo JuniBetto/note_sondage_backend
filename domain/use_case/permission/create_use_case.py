@@ -15,7 +15,7 @@ class CreatePermissionUseCase:
         self.notification_service = notification_service
     async def execute(self, request_dto: PermissionRequestDTO) -> PermissionResponseDTO:
         # Creazione dell'entità Permission
-        if self.permission_repository.find_by_code(request_dto.code):
+        if await self.permission_repository.find_by_code(request_dto.code):
             raise PermissionAlreadyExists(request_dto.code)
 
         new_permission = PermissionEntity(
@@ -25,7 +25,7 @@ class CreatePermissionUseCase:
         )
 
         # Salvataggio dell'entità tramite il repository
-        saved_permission = self.permission_repository.save(new_permission)
+        saved_permission =await self.permission_repository.save(new_permission)
 
 
 

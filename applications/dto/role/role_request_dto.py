@@ -6,3 +6,4 @@ class RoleRequestDTO(BaseModel):
         team_id: UUID
         name : str
         description : str
+        permissions: list[str]

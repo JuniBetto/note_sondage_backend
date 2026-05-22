@@ -8,6 +8,8 @@ class RoleResponseDTO(BaseModel):
     team_id: UUID
     name: str
     description: str
+    permissions: list[str]
+    is_deleted: bool = False
 
     @classmethod
     def from_entity(cls, role):
@@ -15,5 +17,7 @@ class RoleResponseDTO(BaseModel):
             id=role.id,
             team_id=role.team_id,
             name=role.name,
-            description=role.description
+            description=role.description,
+            permissions=role.permissions,
+            is_deleted=role.is_deleted
         )

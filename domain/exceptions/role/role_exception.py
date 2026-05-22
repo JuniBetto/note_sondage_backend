@@ -2,10 +2,15 @@ from domain.exceptions.other_exception import ConflictException, NotFoundExcepti
 
 
 class RoleNotFound(NotFoundException):
-    def __init__(self, Role_id):
-        super().__init__(f"Role {Role_id} not found")
+    def __init__(self, role_id: str):
+        super().__init__(f"Role {role_id} not found")
 
 
 class RoleAlreadyExists(ConflictException):
-    def __init__(self, role: str):
-        super().__init__(f"Role with name '{role}' already exists")
+    def __init__(self, role_name: str):
+        super().__init__(f"Role with name '{role_name}' already exists")
+
+
+class RoleDeleted(NotFoundException):
+    def __init__(self, role_id: str):
+        super().__init__(f"Role {role_id} has been deleted")

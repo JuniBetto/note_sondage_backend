@@ -6,6 +6,6 @@ class GetAllPermissionsUseCase:
     def __init__(self, permission_repository):
         self.permission_repository = permission_repository
 
-    def execute(self) -> list[PermissionResponseDTO]:
-        permissions = self.permission_repository.get_all()
+    async def execute(self) -> list[PermissionResponseDTO]:
+        permissions = await self.permission_repository.get_all()
         return [PermissionResponseDTO.from_entity(permission) for permission in permissions]

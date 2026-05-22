@@ -14,8 +14,8 @@ from applications.dto.permission.permission_response_dto import PermissionRespon
 router=APIRouter()
 
 @router.get("/all",response_model=list[PermissionResponseDTO])
-def get_all_permissions( repo=Depends(get_permission_repository)):
-    return GetAllPermissionsUseCase(repo).execute()
+async def get_all_permissions( repo=Depends(get_permission_repository)):
+    return await GetAllPermissionsUseCase(repo).execute()
 
 @router.post("/create",response_model=PermissionResponseDTO)
 async def create_permission( permission: PermissionRequestDTO,

@@ -101,8 +101,10 @@ class PostgresConnection:
             # Aggiungi RETURNING se non presente e specificato
             if return_columns and "RETURNING" not in query.upper():
                 query = f"{query.rstrip(';')} RETURNING {', '.join(return_columns)}"
-            
-            cursor.execute(query, params or ())
+            try:
+                cursor.execute(query, params or ())
+            except Exception as e:
+                print(f"Errore durante l'esecuzione della query INSERT: {e}")
             
             result = {
                 "operation": "INSERT",
@@ -122,7 +124,8 @@ class PostgresConnection:
     
     def execute_update(self, query: str, params: tuple = None,
                       get_old_values_query: str = None, 
-                      get_old_params: tuple = None) -> Dict[str, Any]:
+                      get_old_params: tuple = None,
+                      return_columns: List[str] = None) -> Dict[str, Any]:
         """
         Esegue una query UPDATE e restituisce vecchi e nuovi valori.
         
@@ -135,6 +138,12 @@ class PostgresConnection:
         Returns:
             Dict con old e new values
         """
+         # Se viene passato return_columns, modifica la query
+        if return_columns and "RETURNING" not in query.upper():
+            # Aggiungi RETURNING alla query
+            returning_clause = ", ".join(return_columns)
+            query = f"{query.rstrip(';')} RETURNING {returning_clause}"
+
         with self.get_cursor() as cursor:
             # PRIMA: Ottieni i vecchi valori se possibile
             old_values = {}
@@ -150,6 +159,7 @@ class PostgresConnection:
             
             # DOPO: Ottieni i nuovi valori se c'è RETURNING
             result = {
+                "affected_rows": 0,
                 "operation": "UPDATE",
                 "timestamp": datetime.now().isoformat(),
                 "old": old_values,
@@ -159,9 +169,14 @@ class PostgresConnection:
             # Cerca RETURNING per ottenere nuovi valori
             if "RETURNING" in query.upper():
                 row = cursor.fetchone()
-                if row:
-                    columns = [desc[0] for desc in cursor.description]
-                    result["new"] = dict(zip(columns, row))
+                try:
+                    if row:
+                        columns = [desc[0] for desc in cursor.description]
+                        result["new"] = dict(zip(columns, row))
+                except Exception as e:
+                    # Nessuna riga restituita da RETURNING
+                    print(f"Errore durante il recupero dei nuovi valori: {e}")
+                    pass
             
             result["affected_rows"] = cursor.rowcount
             return result
@@ -192,8 +207,7 @@ class PostgresConnection:
                     old_values = dict(zip(columns, row))
             
             # ESEGUI il DELETE
-            cursor.execute(query, params or ())
-            
+            cursor.execute(query, params or ())            
             result = {
                 "operation": "DELETE",
                 "timestamp": datetime.now().isoformat(),

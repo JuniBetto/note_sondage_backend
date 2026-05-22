@@ -10,27 +10,24 @@ class PermissionRepository(ABC):
     """Interfaccia del repository - solo nel dominio"""
     
     @abstractmethod
-    def get_all(self, ) -> list[PermissionEntity]:
+    async def get_all(self, ) -> list[PermissionEntity]:
         pass
 
     @abstractmethod
-    def save(self, permission: PermissionEntity) -> PermissionEntity:
+    async def save(self, permission: PermissionEntity) -> PermissionEntity:
         pass
     
     @abstractmethod
-    def find_by_id(self, permission_id: UUID) -> Optional[PermissionEntity]:
+    async def find_by_id(self, permission_id: UUID) -> Optional[PermissionEntity]:
         pass
     
     @abstractmethod
-    def find_by_code(self, code: str) -> Optional[PermissionEntity]:
+    async def find_by_code(self, code: str) -> Optional[PermissionEntity]:
         pass
     
+       
     @abstractmethod
-    def find_all(self, skip: int = 0, limit: int = 100) -> Tuple[List[PermissionEntity], int]:
-        pass
-    
-    @abstractmethod
-    def delete(self, permission_id: UUID) -> bool:
+    async def delete(self, permission_id: UUID) -> bool:
         pass
     
     @abstractmethod
